@@ -145,7 +145,7 @@ const App: React.FC = () => {
   const handleTopicSelect = async (topic: string) => {
     setLoading(true);
     try {
-      const selectedTopic = topic === "随机挑战" 
+      const selectedTopic = topic === "随机选题" 
         ? TOPICS[Math.floor(Math.random() * (TOPICS.length - 1))] 
         : topic;
         
@@ -240,6 +240,9 @@ const App: React.FC = () => {
   }
 
   // Student Application Flow
+  const randomTopic = "随机选题";
+  const specificTopics = TOPICS.filter(t => t !== randomTopic);
+
   return (
     <div className="h-full flex flex-col relative">
       {/* Achievement Overlay */}
@@ -288,29 +291,88 @@ const App: React.FC = () => {
       {/* Student Content */}
       <main className="flex-1 overflow-hidden relative bg-slate-50" ref={contentContainerRef}>
         {appState === AppState.TopicSelection && (
-          <div className="h-full overflow-y-auto p-6">
-            <div className="max-w-4xl mx-auto pt-10 pb-20">
-              <div className="text-center mb-12">
-                <h2 className="text-3xl font-bold text-slate-900 mb-4">今天你想攻克什么难题？</h2>
+          <div className="h-full overflow-y-auto p-6 scrollbar-thin scrollbar-thumb-slate-300">
+            <div className="max-w-4xl mx-auto pt-6 pb-20">
+              <div className="text-center mb-10">
+                <h2 className="text-3xl font-bold text-slate-900 mb-2">今天你想攻克什么难题？</h2>
+                <p className="text-slate-500">选择特定领域专项突破，或随机测试综合能力</p>
+              </div>
+
+              {/* 1. Challenge by Topic */}
+              <div className="mb-12">
+                <div className="flex items-center gap-4 mb-6">
+                   <div className="w-1 h-6 bg-indigo-600 rounded-full"></div>
+                   <h3 className="text-lg font-bold text-slate-800">按主题挑战</h3>
+                </div>
+
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                  {TOPICS.map((topic) => (
+                  {specificTopics.map((topic) => (
                     <button
                       key={topic}
                       onClick={() => handleTopicSelect(topic)}
                       disabled={loading}
-                      className={`p-6 rounded-2xl text-left transition-all duration-300 border 
+                      className={`p-6 rounded-2xl text-left transition-all duration-300 border relative overflow-hidden group h-full flex flex-col justify-between
                         ${loading 
                           ? 'bg-slate-50 border-slate-200 opacity-50 cursor-not-allowed' 
-                          : 'bg-white border-slate-200 hover:border-indigo-500 hover:shadow-xl hover:-translate-y-1 group'
+                          : 'bg-white border-slate-200 hover:border-indigo-500 hover:shadow-lg hover:-translate-y-1'
                         }`}
                     >
-                      <h3 className="font-semibold text-slate-900 group-hover:text-indigo-700">{topic}</h3>
+                      <div>
+                        <div className="absolute right-0 top-0 w-24 h-24 bg-slate-50 rounded-bl-full -mr-4 -mt-4 transition-colors group-hover:bg-indigo-50"></div>
+                        <h3 className="font-semibold text-slate-900 group-hover:text-indigo-700 relative z-10 text-lg mb-2">{topic}</h3>
+                      </div>
+                      <div className="flex items-center gap-1 text-slate-400 text-sm relative z-10 group-hover:text-indigo-500 font-medium mt-4">
+                        <span>开始练习</span>
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
+                        </svg>
+                      </div>
                     </button>
                   ))}
                 </div>
               </div>
+
+              {/* 2. Random Challenge */}
+              <div>
+                <div className="flex items-center gap-4 mb-6">
+                   <div className="w-1 h-6 bg-purple-600 rounded-full"></div>
+                   <h3 className="text-lg font-bold text-slate-800">随机选题</h3>
+                </div>
+                
+                <button
+                  onClick={() => handleTopicSelect(randomTopic)}
+                  disabled={loading}
+                  className={`w-full p-8 rounded-2xl relative overflow-hidden group transition-all duration-300 ${
+                    loading 
+                      ? 'bg-slate-100 opacity-50 cursor-not-allowed'
+                      : 'bg-gradient-to-r from-indigo-600 to-purple-600 hover:shadow-xl hover:shadow-indigo-500/30 hover:-translate-y-1'
+                  }`}
+                >
+                  <div className="absolute top-0 left-0 w-full h-full bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] opacity-10"></div>
+                  <div className="relative z-10 flex flex-row items-center justify-between px-4">
+                    <div className="text-left text-white">
+                      <h3 className="text-2xl font-bold mb-2">综合能力测试</h3>
+                      <p className="text-indigo-100 opacity-90 max-w-lg">
+                        不区分具体主题，随机抽取一道竞赛真题。模拟真实考场环境，测试你的综合应变能力。
+                      </p>
+                    </div>
+                    <div className="bg-white/20 p-4 rounded-full backdrop-blur-sm">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="none" viewBox="0 0 24 24" stroke="white">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z" />
+                        </svg>
+                    </div>
+                  </div>
+                </button>
+              </div>
+
               {loading && (
-                 <div className="text-center mt-10 text-indigo-600 animate-pulse">生成题目中...</div>
+                 <div className="text-center mt-10 text-indigo-600 flex items-center justify-center gap-2">
+                    <svg className="animate-spin h-5 w-5" viewBox="0 0 24 24">
+                        <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" fill="none"></circle>
+                        <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                    </svg>
+                    <span>正在为你准备题目，请稍候...</span>
+                 </div>
               )}
             </div>
           </div>

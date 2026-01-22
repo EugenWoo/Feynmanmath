@@ -16,7 +16,7 @@ export const AnalyticsDashboard: React.FC<AnalyticsDashboardProps> = ({ mistakes
   // Calculate statistics
   const stats = React.useMemo(() => {
     const counts: Record<string, number> = {};
-    TOPICS.filter(t => t !== "随机挑战").forEach(t => counts[t] = 0);
+    TOPICS.filter(t => t !== "随机选题").forEach(t => counts[t] = 0);
     
     mistakes.forEach(m => {
       if (counts[m.topic] !== undefined) {

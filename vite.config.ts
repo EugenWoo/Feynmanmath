@@ -1,22 +1,23 @@
-import { defineConfig } from 'vite';
+import path from 'path';
+import { defineConfig, loadEnv } from 'vite';
 import react from '@vitejs/plugin-react';
 
-// https://vitejs.dev/config/
-export default defineConfig({
-  plugins: [react()],
-  define: {
-    // Polyfill process.env for the existing code structure if needed,
-    // though using import.meta.env is preferred in Vite.
-    // We map VITE_API_KEY to process.env.API_KEY for backward compatibility with your code.
-    'process.env.API_KEY': 'import.meta.env.VITE_API_KEY'
-  },
-  server: {
-    proxy: {
-      '/api/genai': {
-        target: 'https://generativelanguage.googleapis.com',
-        changeOrigin: true,
-        rewrite: (path) => path.replace(/^\/api\/genai/, '')
+export default defineConfig(({ mode }) => {
+    const env = loadEnv(mode, '.', '');
+    return {
+      server: {
+        port: 3000,
+        host: '0.0.0.0',
+      },
+      plugins: [react()],
+      define: {
+        'process.env.API_KEY': JSON.stringify(env.GEMINI_API_KEY),
+        'process.env.GEMINI_API_KEY': JSON.stringify(env.GEMINI_API_KEY)
+      },
+      resolve: {
+        alias: {
+          '@': path.resolve(__dirname, '.'),
+        }
       }
-    }
-  }
+    };
 });

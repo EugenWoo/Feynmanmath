@@ -64,7 +64,7 @@ export const CoachDashboard: React.FC<CoachDashboardProps> = ({ onSelectStudent,
     ];
 
     // Add dynamic topic columns
-    const topics = TOPICS.filter(t => t !== "随机挑战");
+    const topics = TOPICS.filter(t => t !== "随机选题");
     topics.forEach(t => {
       columns.push({ header: t, key: t, width: 20 });
     });

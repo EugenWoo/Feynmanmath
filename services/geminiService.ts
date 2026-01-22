@@ -1,16 +1,11 @@
+
 import { GoogleGenAI, Content, Part, Type } from "@google/genai";
 import { Message, Sender, Problem, Attachment } from "../types";
 import { FEYNMAN_TUTOR_PROMPT, PROBLEM_GENERATOR_PROMPT } from "../constants";
 
 // Initialize Gemini Client
-// We use a relative 'baseUrl' so requests go to our own server (e.g., /api/genai)
-// which then proxies them to Google. This avoids CORS and Firewall issues.
-// NOTE: Ensure VITE_API_KEY is set in your environment variables.
-const ai = new GoogleGenAI({ 
-  apiKey: process.env.API_KEY, 
-}, {
-  baseUrl: '/api/genai'
-});
+// CRITICAL: process.env.API_KEY is assumed to be available.
+const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
 
 /**
  * Generates a math problem based on the selected topic.
@@ -71,7 +66,7 @@ export const generateMathProblem = async (topic: string): Promise<Problem> => {
     return {
        id: Date.now().toString(),
        topic: topic,
-       content: "生成题目时遇到问题，请重试。请确认云托管环境变量 VITE_API_KEY 已配置。",
+       content: "生成题目时遇到问题，请重试。",
        difficulty: 'Medium'
     };
   }
