@@ -1,0 +1,5 @@
+{
+  "name": "FeynmanMath - Competition Trainer",
+  "description": "A math competition practice app that uses the Feynman learning technique to guide students through problems using photo analysis and Socratic dialogue.",
+  "requestFramePermissions": []
+}
